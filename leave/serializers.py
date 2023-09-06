@@ -22,4 +22,4 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LeaveRequest
-        fields = ['id', 'employee', 'employee_name', 'leave_type', 'leave_type_name', 'start_date', 'end_date', 'reason', 'status', 'created_at', 'updated_at']
+        fields = ['id', 'user', 'leave_type', 'start_date', 'end_date', 'reason', 'status', 'created_at', 'updated_at']

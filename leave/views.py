@@ -10,13 +10,9 @@ from leave.models import LeaveRequest, LeaveType, UserLeaves
 from leave.serializers import LeaveRequestSerializer, LeaveSerializer, UserLeavesSerializer
 from users.models import Users
 
-import json
-import time
-import uuid
-import requests
 
 class LeaveTypesAPIView(APIView):
-    permission_classes=[IsAuthenticated]
+    #permission_classes=[IsAuthenticated]
     def post(self, request):
         name = request.data.get('name')
         days = request.data.get('days')
@@ -36,6 +32,7 @@ class LeaveTypesAPIView(APIView):
         })
 
 class GetLeaveTypes(APIView):
+    #permission_classes=[IsAuthenticated]
     def get(self,request):
         leave_types = LeaveType.objects.all()
         serializer = LeaveSerializer(leave_types, many=True)
@@ -45,7 +42,7 @@ class GetLeaveTypes(APIView):
         })
     
 class UserLeavesAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     def post(self, request):
         user_id = int(request.data.get('user'))
         user = Users.objects.get(id=user_id)
@@ -68,26 +65,36 @@ class UserLeavesAPIView(APIView):
             "status":True,
             "name":serializer.data
         })
+class GetUserLeaves(APIView):
+    #permission_classes=[IsAuthenticated]
+    def get(self,request):
+        user_leaves = UserLeaves.objects.all()
+        serializer = LeaveSerializer(user_leaves, many=True)
+        return Response({
+            "status":True,
+            "name":serializer.data
+        })
     
 
 class LeaveRequestAPIView(APIView):
+    #permission_classes=[IsAuthenticated]
     def post(self, request):
-        user_id = request.data.get('user_id')
+        user_id = request.data.get('user')
         user = Users.objects.get(id=user_id)
 
-        leave_id = request.data.get('leave_id')
+        leave_id = request.data.get('leave_type')
         leave_type = LeaveType.objects.get(id=leave_id)
 
         start_date = request.data.get('start_date')
         end_date = request.data.get('end_date')
         reason = request.data.get('reason')
         status = request.data.get('status')
-        created_at = request.data.get('created_at')
-        updated_at = request.data.get('update_at')
+        #created_at = request.data.get('created_at')
+        #updated_at = request.data.get('update_at')
         
 
         leave_requests = LeaveRequest.objects.create(
-            employee = user,
+            user = user,
             leave_type = leave_type,
             start_date = start_date,
             end_date = end_date,
